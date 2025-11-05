@@ -14,4 +14,13 @@ public class Character {
     public String showName() {
         return this.name;   
     }
+    public int showLevel(){
+        return this.level;
+    }
+    public int showHealth(){
+        return this.health;
+    }
+    public void upLevel(){
+        this.level += 1;
+    }
 }
