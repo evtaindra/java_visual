@@ -1,71 +1,102 @@
-// MainApp.java
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
+    // Variabel untuk nyimpan stats karakter (mirip inventory)
+    private String name = "Steve";
+    private int health = 20;
+    private int level = 1;
+
+    // Label yang bakal kita update terus
+    private Label nameLabel;
+    private Label healthLabel;
+    private Label levelLabel;
+
     @Override
     public void start(Stage primaryStage) {
         GridPane grid = new GridPane();
-        grid.setPadding(new Insets(20));
-        grid.setVgap(15);
-        grid.setHgap(15);
         grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
 
-        Label lblName = new Label("Nama Karakter:");
-        TextField tfName = new TextField();
-        tfName.setPromptText("contoh: Steve");
+        // Input nama
+        grid.add(new Label("Nama Karakter:"), 0, 0);
+        TextField nameField = new TextField(name);
+        grid.add(nameField, 1, 0);
 
-        Label lblHealth = new Label("Health Awal:");
-        TextField tfHealth = new TextField();
-        tfHealth.setPromptText("100");
+        // Button Apply Name
+        Button applyNameBtn = new Button("Apply Name");
+        grid.add(applyNameBtn, 2, 0);
 
-        Label lblLevel = new Label("Level Awal:");
-        TextField tfLevel = new TextField();
-        tfLevel.setPromptText("1");
+        // Display stats
+        nameLabel = new Label("Nama: " + name);
+        healthLabel = new Label("Health: " + health + " ❤️");
+        levelLabel = new Label("Level: " + level);
 
-        Button btnCreate = new Button("Create Character!");
-        btnCreate.setStyle("-fx-font-size: 14px; -fx-background-color: #4CAF50; -fx-text-fill: white;");
+        grid.add(nameLabel, 0, 1, 3, 1);
+        grid.add(healthLabel, 0, 2, 3, 1);
+        grid.add(levelLabel, 0, 3, 3, 1);
 
-        Label lblResult = new Label("Karakter belum dibuat...");
-        lblResult.setStyle("-fx-font-size: 16px; -fx-text-fill: green;");
+        // Button Level Up & Take Damage
+        Button levelUpBtn = new Button("Level Up ⚡");
+        Button damageBtn = new Button("Take Damage ☠");
 
-        grid.add(lblName, 0, 0);
-        grid.add(tfName, 1, 0);
-        grid.add(lblHealth, 0, 1);
-        grid.add(tfHealth, 1, 1);
-        grid.add(lblLevel, 0, 2);
-        grid.add(tfLevel, 1, 2);
-        grid.add(btnCreate, 1, 3);
-        grid.add(lblResult, 0, 4, 2, 1);
+        //Button Heal Potion
+        Button healPotionBtn = new Button("Heal Potion ❤️");
+      
 
-        btnCreate.setOnAction(e -> {
-            try {
-                String name = tfName.getText().trim();
-                if (name.isEmpty()) throw new Exception();
-                int health = Integer.parseInt(tfHealth.getText());
-                int level = Integer.parseInt(tfLevel.getText());
+        grid.add(levelUpBtn, 0, 4);
+        grid.add(damageBtn, 1, 4);
+        grid.add(healPotionBtn, 2, 4);
 
-                Character newChar = new Character(name, health, level);
-                lblResult.setText("Berhasil buat karakter!\n" + newChar.displayInfo());
-                lblResult.setStyle("-fx-text-fill: lime; -fx-font-weight: bold");
+        // === EVENT HANDLING DI SINI ===
 
-                tfName.clear();
-                tfHealth.clear();
-                tfLevel.clear();
-            } catch (Exception ex) {
-                lblResult.setText("Error bro! Nama wajib diisi & health/level harus angka!");
-                lblResult.setStyle("-fx-text-fill: red;");
+        // 1. Apply Name button
+        applyNameBtn.setOnAction(e -> {
+            name = nameField.getText().trim();
+            if (name.isEmpty()) name = "Steve";
+            nameLabel.setText("Nama: " + name);
+        });
+
+        // 2. Level Up button
+        levelUpBtn.setOnAction(e -> {
+            level++;
+            levelLabel.setText("Level: " + level);
+            // Bonus kecil: health full lagi pas level up (kayak di game)
+            health = 20;
+            healthLabel.setText("Health: " + health + " ❤️");
+        });
+
+        // 3. Take Damage button
+        damageBtn.setOnAction(e -> {
+            health -= 4;
+            if (health < 0) health = 0;
+            healthLabel.setText("Health: " + health + " ❤️");
+
+            // Kalau mati, reset level
+            if (health == 0) {
+                level = 1;
+                levelLabel.setText("Level: " + level);
             }
+        });
+        // 4. Heal Potion button
+        healPotionBtn.setOnAction(e -> {
+            health += 10;
+            if (health > 20) health = 20;
+            healthLabel.setText("Health: " + health + " ❤️");
         });
 
         Scene scene = new Scene(grid, 500, 400);
-        primaryStage.setTitle("Minecraft Character Manager - Day 5");
+        primaryStage.setTitle("Minecraft Character Manager 🧱");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
