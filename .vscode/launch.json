@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Launch MainApp (JavaFX)",
+            "request": "launch",
+            "mainClass": "MainApp",
+            "cwd": "${workspaceFolder}",
+            "vmArgs": "--module-path \"D:/perkuliahan2025/java_visual/22_10_2025/java_visual/javafx-sdk-21.0.9/lib\" --add-modules javafx.controls,javafx.fxml"
+        }
+    ]
+}
