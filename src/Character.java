@@ -1,26 +1,36 @@
+// Character.java
 public class Character {
-    //Devinisi Variabel /Property
-    public String name;
-    public int health;
-    public int level;
+    private String name;
+    private int health;
+    private int level;
 
-    //Buat Constructor
-    public Character(String xname, int xhealth, int xlevel) {
-        this.name = xname;
-        this.health = xhealth;
-        this.level = xlevel;
+    // Constructor
+    public Character(String name, int health, int level) {
+        this.name = name;
+        this.health = health;
+        this.level = level;
     }
-    //Buat Method untuk nampilkan Nama
-    public String showName() {
-        return this.name;   
+
+    // Method buat naik level
+    public void levelUp() {
+        level++;
+        System.out.println(name + " naik ke level " + level + "!");
     }
-    public int showLevel(){
-        return this.level;
+
+    // Method kena damage
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) health = 0;
+        System.out.println(name + " kena damage! Health sekarang: " + health);
     }
-    public int showHealth(){
-        return this.health;
+
+    // Method buat display info (dipake di GUI)
+    public String displayInfo() {
+        return "Nama: " + name + "\nHealth: " + health + "\nLevel: " + level;
     }
-    public void upLevel(){
-        this.level += 1;
-    }
+
+    // Getter (kalo nanti butuh)
+    public String getName() { return name; }
+    public int getHealth() { return health; }
+    public int getLevel() { return level; }
 }
