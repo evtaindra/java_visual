@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
@@ -74,8 +75,11 @@ public class MainApp extends Application {
             // Bonus kecil: health full lagi pas level up (kayak di game)
             health = 20;
             healthLabel.setText("Health: " + health + " ❤️");
+            AudioClip levelUpSound = new AudioClip("https://www.soundjay.com/buttons/button-8.mp3");
+            levelUpSound.play();
         });
 
+        
         // 3. Take Damage button
         damageBtn.setOnAction(e -> {
             health -= 4;
@@ -87,6 +91,8 @@ public class MainApp extends Application {
                 level = 1;
                 levelLabel.setText("Level: " + level);
             }
+            AudioClip damageSound = new AudioClip("https://www.soundjay.com/buttons/button-2.mp3");
+            damageSound.play();
         });
         // 4. Heal Potion button
         healPotionBtn.setOnAction(e -> {
