@@ -96,7 +96,10 @@ public class MainApp extends Application {
             health = 20;
             updateHealthDisplay();
 
-            AudioClip levelUpSound = new AudioClip("https://www.soundjay.com/buttons/button-8.mp3");
+           // AudioClip levelUpSound = new AudioClip("https://www.soundjay.com/buttons/button-8.mp3");
+            AudioClip levelUpSound = new AudioClip(
+                getClass().getResource("/sounds/button-2.mp3").toExternalForm()
+            );
             levelUpSound.play();
         });
 
