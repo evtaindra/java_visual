@@ -113,7 +113,10 @@ public class MainApp extends Application {
                 levelLabel.setText("Level: " + level);
             }
 
-            AudioClip damageSound = new AudioClip("https://www.soundjay.com/buttons/button-2.mp3");
+            //AudioClip damageSound = new AudioClip("https://www.soundjay.com/buttons/button-2.mp3");
+            AudioClip damageSound = new AudioClip(
+                getClass().getResource("/sounds/beep-10.mp3").toExternalForm()
+            );
             damageSound.play();
         });
 
