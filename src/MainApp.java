@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.AudioClip;
@@ -11,97 +12,115 @@ import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
-    // Variabel untuk nyimpan stats karakter (mirip inventory)
+    // Stats karakter
     private String name = "Steve";
     private int health = 20;
     private int level = 1;
 
-    // Label yang bakal kita update terus
+    // Component yang perlu di-update terus (jadi field class!)
     private Label nameLabel;
-    private Label healthLabel;
+    private ProgressBar healthBar;
+    private Label healthTextLabel;
     private Label levelLabel;
+
+    // Helper method biar kode event lebih rapi
+    private void updateHealthDisplay() {
+        double progress = (double) health / 20.0;
+        healthBar.setProgress(progress);
+        healthTextLabel.setText("Health: " + health + "/20 ❤️");
+
+        // Ganti warna dinamis kayak hunger bar Minecraft
+        if (health <= 8) {
+            healthBar.setStyle("-fx-accent: red;");
+        } else if (health <= 12) {
+            healthBar.setStyle("-fx-accent: orange;");
+        } else {
+            healthBar.setStyle("-fx-accent: lime;");
+        }
+    }
 
     @Override
     public void start(Stage primaryStage) {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.setVgap(12);
+        grid.setPadding(new Insets(25));
 
-        // Input nama
+        // Row 0: Input nama
         grid.add(new Label("Nama Karakter:"), 0, 0);
         TextField nameField = new TextField(name);
         grid.add(nameField, 1, 0);
-
-        // Button Apply Name
         Button applyNameBtn = new Button("Apply Name");
         grid.add(applyNameBtn, 2, 0);
 
-        // Display stats
+        // Row 1: Nama display
         nameLabel = new Label("Nama: " + name);
-        healthLabel = new Label("Health: " + health + " ❤️");
-        levelLabel = new Label("Level: " + level);
-
         grid.add(nameLabel, 0, 1, 3, 1);
-        grid.add(healthLabel, 0, 2, 3, 1);
-        grid.add(levelLabel, 0, 3, 3, 1);
 
-        // Button Level Up & Take Damage
+        // Row 2: Health bar
+        grid.add(new Label("Health:"), 0, 2);
+        healthBar = new ProgressBar(1.0);  // Full awalnya
+        healthBar.setPrefWidth(300);
+        healthBar.setStyle("-fx-accent: lime;");
+        grid.add(healthBar, 1, 2, 2, 1);
+
+        // Row 3: Health text
+        healthTextLabel = new Label("Health: " + health + "/20 ❤️");
+        grid.add(healthTextLabel, 0, 3, 3, 1);
+
+        // Row 4: Level
+        levelLabel = new Label("Level: " + level);
+        grid.add(levelLabel, 0, 4, 3, 1);
+
+        // Row 5: Buttons
         Button levelUpBtn = new Button("Level Up ⚡");
         Button damageBtn = new Button("Take Damage ☠");
-
-        //Button Heal Potion
         Button healPotionBtn = new Button("Heal Potion ❤️");
-      
 
-        grid.add(levelUpBtn, 0, 4);
-        grid.add(damageBtn, 1, 4);
-        grid.add(healPotionBtn, 2, 4);
+        grid.add(levelUpBtn, 0, 5);
+        grid.add(damageBtn, 1, 5);
+        grid.add(healPotionBtn, 2, 5);
 
-        // === EVENT HANDLING DI SINI ===
+        // === EVENT HANDLING ===
 
-        // 1. Apply Name button
         applyNameBtn.setOnAction(e -> {
             name = nameField.getText().trim();
             if (name.isEmpty()) name = "Steve";
             nameLabel.setText("Nama: " + name);
         });
 
-        // 2. Level Up button
         levelUpBtn.setOnAction(e -> {
             level++;
             levelLabel.setText("Level: " + level);
-            // Bonus kecil: health full lagi pas level up (kayak di game)
             health = 20;
-            healthLabel.setText("Health: " + health + " ❤️");
+            updateHealthDisplay();
+
             AudioClip levelUpSound = new AudioClip("https://www.soundjay.com/buttons/button-8.mp3");
             levelUpSound.play();
         });
 
-        
-        // 3. Take Damage button
         damageBtn.setOnAction(e -> {
             health -= 4;
             if (health < 0) health = 0;
-            healthLabel.setText("Health: " + health + " ❤️");
+            updateHealthDisplay();
 
-            // Kalau mati, reset level
             if (health == 0) {
                 level = 1;
                 levelLabel.setText("Level: " + level);
             }
+
             AudioClip damageSound = new AudioClip("https://www.soundjay.com/buttons/button-2.mp3");
             damageSound.play();
         });
-        // 4. Heal Potion button
+
         healPotionBtn.setOnAction(e -> {
             health += 10;
             if (health > 20) health = 20;
-            healthLabel.setText("Health: " + health + " ❤️");
+            updateHealthDisplay();
         });
 
-        Scene scene = new Scene(grid, 500, 400);
+        Scene scene = new Scene(grid, 700, 500);
         primaryStage.setTitle("Minecraft Character Manager 🧱");
         primaryStage.setScene(scene);
         primaryStage.show();
