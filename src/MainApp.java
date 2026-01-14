@@ -2,40 +2,60 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
 
     // Stats karakter
-    private String name = "Steve";
-    private int health = 20;
-    private int level = 1;
+    private String playerName = "Steve";
+    private int playerHealth = 20;
+    private int playerLevel = 1;
 
-    // Component yang perlu di-update terus (jadi field class!)
-    private Label nameLabel;
-    private ProgressBar healthBar;
-    private Label healthTextLabel;
-    private Label levelLabel;
+    private String enemyName = "Zombie";
+    private int enemyHealth = 30;
+    private int enemyLevel = 1;  // Zombie juga punya level (opsional)
 
-    // Helper method biar kode event lebih rapi
-    private void updateHealthDisplay() {
-        double progress = (double) health / 20.0;
-        healthBar.setProgress(progress);
-        healthTextLabel.setText("Health: " + health + "/20 ❤️");
+    // Components
+    private ProgressBar playerHealthBar;
+    private Label playerHealthText;
+    private ProgressBar enemyHealthBar;
+    private Label enemyHealthText;
+    private Label statusLabel;  // Untuk winner announcement
+    private Label playerLevelLabel;
+    private Label enemyLevelLabel;
 
-        // Ganti warna dinamis kayak hunger bar Minecraft
-        if (health <= 8) {
-            healthBar.setStyle("-fx-accent: red;");
-        } else if (health <= 12) {
-            healthBar.setStyle("-fx-accent: orange;");
-        } else {
-            healthBar.setStyle("-fx-accent: lime;");
+    private void updateHealthDisplays() {
+        // Update Steve
+        double playerProg = (double) playerHealth / 20.0;
+        playerHealthBar.setProgress(playerProg);
+        playerHealthText.setText("Health: " + playerHealth + "/20 ❤️");
+        playerHealthBar.setStyle(playerHealth <= 8 ? "-fx-accent: red;" : playerHealth <= 12 ? "-fx-accent: orange;" : "-fx-accent: lime;");
+
+        // Update Zombie
+        double enemyProg = (double) enemyHealth / 20.0;
+        enemyHealthBar.setProgress(enemyProg);
+        enemyHealthText.setText("Health: " + enemyHealth + "/20 💀");
+        enemyHealthBar.setStyle(enemyHealth <= 8 ? "-fx-accent: red;" : enemyHealth <= 12 ? "-fx-accent: orange;" : "-fx-accent: lime;");
+
+        // Check winner
+        if (playerHealth <= 0) {
+            statusLabel.setText("Zombie Wins! Steve kalah 😭");
+            enemyLevel++;
+            enemyLevelLabel.setText("Level: " + enemyLevel);
+            // Optional: reset health buat rematch
+        } else if (enemyHealth <= 0) {
+            statusLabel.setText("Steve Wins! Level up! 🎉");
+            playerLevel++;
+            playerLevelLabel.setText("Level: " + playerLevel);
+            // Optional: reset health
         }
     }
 
@@ -43,91 +63,69 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(12);
-        grid.setPadding(new Insets(25));
+        grid.setHgap(20);
+        grid.setVgap(15);
+        grid.setPadding(new Insets(20));
+      
 
-        // Row 0: Input nama
-        grid.add(new Label("Nama Karakter:"), 0, 0);
-        TextField nameField = new TextField(name);
-        grid.add(nameField, 1, 0);
-        Button applyNameBtn = new Button("Apply Name");
-        grid.add(applyNameBtn, 2, 0);
+        // Gambar karakter (ganti URL dengan gambar lo, atau local file)
+        //ImageView steveView = new ImageView(new Image("https://www.minecraft.net/content/dam/minecraft/nether-update/steve.png"));  // Contoh URL Steve
+        // Jika menggunakan file lokal, bisa seperti ini:
+        
+        // Gambar Steve
+        ImageView steveView = new ImageView(new Image(getClass().getResource("/images/steve.jpg").toExternalForm()));
+        steveView.setFitHeight(300);
+        steveView.setPreserveRatio(true);
+        steveView.setSmooth(true);
+        steveView.setStyle("-fx-border-color: #4CAF50; -fx-border-width: 4; -fx-border-radius: 15;");
+        steveView.setEffect(new DropShadow(15, Color.BLACK));
 
-        // Row 1: Nama display
-        nameLabel = new Label("Nama: " + name);
-        grid.add(nameLabel, 0, 1, 3, 1);
+        // Gambar Zombie
+        ImageView zombieView = new ImageView(new Image(getClass().getResource("/images/zombie.jpg").toExternalForm()));
+        zombieView.setFitHeight(300);
+        zombieView.setPreserveRatio(true);
+        zombieView.setSmooth(true);
+        zombieView.setStyle("-fx-border-color: #F44336; -fx-border-width: 4; -fx-border-radius: 15;");
+        zombieView.setEffect(new DropShadow(15, Color.BLACK));
 
-        // Row 2: Health bar
-        grid.add(new Label("Health:"), 0, 2);
-        healthBar = new ProgressBar(1.0);  // Full awalnya
-        healthBar.setPrefWidth(300);
-        healthBar.setStyle("-fx-accent: lime;");
-        grid.add(healthBar, 1, 2, 2, 1);
+        VBox steveBox = new VBox(15, new Label("Steve"), steveView, playerLevelLabel = new Label("Level: 1"), playerHealthBar = new ProgressBar(1.0), playerHealthText = new Label("Health: 20/20 ❤️"));
+        steveBox.setAlignment(Pos.CENTER);
+        steveBox.setPadding(new Insets(20));
 
-        // Row 3: Health text
-        healthTextLabel = new Label("Health: " + health + "/20 ❤️");
-        grid.add(healthTextLabel, 0, 3, 3, 1);
+        VBox zombieBox = new VBox(15, new Label("Zombie"), zombieView, enemyLevelLabel = new Label("Level: 1"), enemyHealthBar = new ProgressBar(1.0), enemyHealthText = new Label("Health: 20/20 💀"));
+        zombieBox.setAlignment(Pos.CENTER);
+        zombieBox.setPadding(new Insets(20));
 
-        // Row 4: Level
-        levelLabel = new Label("Level: " + level);
-        grid.add(levelLabel, 0, 4, 3, 1);
+        grid.add(steveBox, 0, 0);
+        grid.add(zombieBox, 2, 0);
 
-        // Row 5: Buttons
-        Button levelUpBtn = new Button("Level Up ⚡");
-        Button damageBtn = new Button("Take Damage ☠");
-        Button healPotionBtn = new Button("Heal Potion ❤️");
+        // Status & Button di tengah
+        statusLabel = new Label("Fight!");
+        statusLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        Button fightBtn = new Button("Fight! ⚔️");
+        grid.add(statusLabel, 1, 0);
+        grid.add(fightBtn, 1, 1);
 
-        grid.add(levelUpBtn, 0, 5);
-        grid.add(damageBtn, 1, 5);
-        grid.add(healPotionBtn, 2, 5);
+        fightBtn.setOnAction(e -> {
+            if (playerHealth > 0 && enemyHealth > 0) {
+                // Serangan sederhana: Steve damage Zombie 5, Zombie damage Steve 4
+                enemyHealth -= 5;
+                if (enemyHealth < 0) enemyHealth = 0;
 
-        // === EVENT HANDLING ===
+                playerHealth -= 4;
+                if (playerHealth < 0) playerHealth = 0;
 
-        applyNameBtn.setOnAction(e -> {
-            name = nameField.getText().trim();
-            if (name.isEmpty()) name = "Steve";
-            nameLabel.setText("Nama: " + name);
-        });
+                updateHealthDisplays();
 
-        levelUpBtn.setOnAction(e -> {
-            level++;
-            levelLabel.setText("Level: " + level);
-            health = 20;
-            updateHealthDisplay();
-
-           // AudioClip levelUpSound = new AudioClip("https://www.soundjay.com/buttons/button-8.mp3");
-            AudioClip levelUpSound = new AudioClip(
-                getClass().getResource("/sounds/button-2.mp3").toExternalForm()
-            );
-            levelUpSound.play();
-        });
-
-        damageBtn.setOnAction(e -> {
-            health -= 4;
-            if (health < 0) health = 0;
-            updateHealthDisplay();
-
-            if (health == 0) {
-                level = 1;
-                levelLabel.setText("Level: " + level);
+                // Sound effect (opsional)
+               // new AudioClip("https://www.soundjay.com/buttons/button-2.mp3").play();            
+                AudioClip damageSound = new AudioClip(getClass().getResource("/sounds/beep-10.mp3").toExternalForm());
+                damageSound.play();
             }
-
-            //AudioClip damageSound = new AudioClip("https://www.soundjay.com/buttons/button-2.mp3");
-            AudioClip damageSound = new AudioClip(
-                getClass().getResource("/sounds/beep-10.mp3").toExternalForm()
-            );
-            damageSound.play();
         });
 
-        healPotionBtn.setOnAction(e -> {
-            health += 10;
-            if (health > 20) health = 20;
-            updateHealthDisplay();
-        });
-
-        Scene scene = new Scene(grid, 700, 500);
-        primaryStage.setTitle("Minecraft Character Manager 🧱");
+        Scene scene = new Scene(grid, 800, 600);
+        primaryStage.setTitle("Minecraft Character Battle 🧟 vs 🧑");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

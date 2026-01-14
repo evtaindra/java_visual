@@ -1,8 +1,16 @@
 {
     "java.project.sourcePaths": [
-        "src"
+        "src",
+        "src\\main\\resources"
     ],
     "java.project.referencedLibraries": [
-        "D:/perkuliahan2025/Java_visual/22_10_2025/java_visual/javafx-sdk-21.0.9/lib/**/*.jar"
+        "d:\\perkuliahan2025\\Java_visual\\22_10_2025\\java_visual\\javafx-sdk-21.0.9\\lib\\javafx.base.jar",
+        "d:\\perkuliahan2025\\Java_visual\\22_10_2025\\java_visual\\javafx-sdk-21.0.9\\lib\\javafx.controls.jar",
+        "d:\\perkuliahan2025\\Java_visual\\22_10_2025\\java_visual\\javafx-sdk-21.0.9\\lib\\javafx.web.jar",
+        "d:\\perkuliahan2025\\Java_visual\\22_10_2025\\java_visual\\javafx-sdk-21.0.9\\lib\\javafx.graphics.jar",
+        "d:\\perkuliahan2025\\Java_visual\\22_10_2025\\java_visual\\javafx-sdk-21.0.9\\lib\\javafx.media.jar",
+        "d:\\perkuliahan2025\\Java_visual\\22_10_2025\\java_visual\\javafx-sdk-21.0.9\\lib\\javafx.fxml.jar",
+        "d:\\perkuliahan2025\\Java_visual\\22_10_2025\\java_visual\\javafx-sdk-21.0.9\\lib\\javafx.swing.jar",
+        "d:\\perkuliahan2025\\Java_visual\\22_10_2025\\java_visual\\javafx-sdk-21.0.9\\lib\\javafx-swt.jar"
     ]
 }
