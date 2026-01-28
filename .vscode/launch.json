@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MinecraftManagerAdvanced",
+            "request": "launch",
+            "mainClass": "MinecraftManagerAdvanced",
+            "projectName": "java_visual_41f50371"
+        },
+        {
+            "type": "java",
             "name": "Launch MainApp (JavaFX)",
             "request": "launch",
             "mainClass": "MainApp",
