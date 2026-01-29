@@ -30,7 +30,10 @@ public class MainApp extends Application {
     private Label statusLabel;
     private Label playerLevelLabel;
     private Label enemyLevelLabel;
+    private Label potionLabel;       // NEW: Label untuk potion count
     private Button fightBtn;
+    private Button usePotionBtn;     // NEW: Button use potion
+    private ImageView steveView;     // Dibuat field biar bisa animate heal
 
     private void updateHealthDisplays() {
         // Update Steve
@@ -122,14 +125,28 @@ public class MainApp extends Application {
 
         MenuItem healSteveItem = new MenuItem("Heal Steve (+10)");
         healSteveItem.setOnAction(e -> {
-            steve.heal(10); // tambah method heal di Character nanti
-            updateHealthDisplays();
+            if (steve.getHealth() < steve.getMaxHealth()){
+                steve.heal(10); // tambah method heal di Character nanti
+                updateHealthDisplays();
+            }else{
+                statusLabel.setText("Steve udah full health!");
+            }            
+        });
+
+        MenuItem healZombieItem = new MenuItem("Heal Zombie (+10)");
+        healZombieItem.setOnAction(e -> {
+            if (zombie.getHealth() < zombie.getMaxHealth()) {
+                zombie.heal(10);
+                updateHealthDisplays();
+            } else {
+                statusLabel.setText("Zombie udah full health!");
+            }
         });
 
         MenuItem exitItem = new MenuItem("Exit");
         exitItem.setOnAction(e -> primaryStage.close());
 
-        gameMenu.getItems().addAll(resetItem, healSteveItem, new SeparatorMenuItem(), exitItem);
+        gameMenu.getItems().addAll(resetItem, healSteveItem, healZombieItem, new SeparatorMenuItem(), exitItem);
         menuBar.getMenus().add(gameMenu);
 
         // Gambar & VBox untuk Steve & Zombie
